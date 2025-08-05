@@ -7,44 +7,29 @@ import tempfile
 from pathlib import Path
 import time
 
-# ANSI Color Codes with Gradients
+# ANSI Color Codes with French Flag Colors
 class Colors:
     RESET = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
-    # Standard Colors
-    BLACK = '\033[30m'
-    RED = '\033[31m'
-    GREEN = '\033[32m'
-    YELLOW = '\033[33m'
-    BLUE = '\033[34m'
-    MAGENTA = '\033[35m'
-    CYAN = '\033[36m'
-    WHITE = '\033[37m'
+    # French Flag Colors
+    BLUE = '\033[34m'        # Blue stripe
+    WHITE = '\033[37m'       # White stripe  
+    RED = '\033[31m'         # Red stripe
     
-    # Bright Colors
-    BRIGHT_BLACK = '\033[90m'
-    BRIGHT_RED = '\033[91m'
-    BRIGHT_GREEN = '\033[92m'
-    BRIGHT_YELLOW = '\033[93m'
+    # Bright versions
     BRIGHT_BLUE = '\033[94m'
-    BRIGHT_MAGENTA = '\033[95m'
-    BRIGHT_CYAN = '\033[96m'
     BRIGHT_WHITE = '\033[97m'
+    BRIGHT_RED = '\033[91m'
     
-    # Background Colors
-    BG_BLACK = '\033[40m'
-    BG_RED = '\033[41m'
-    BG_GREEN = '\033[42m'
-    BG_YELLOW = '\033[43m'
+    # Background colors
     BG_BLUE = '\033[44m'
-    BG_MAGENTA = '\033[45m'
-    BG_CYAN = '\033[46m'
     BG_WHITE = '\033[47m'
+    BG_RED = '\033[41m'
 
 def gradient_text(text, start_color, end_color):
-    """Create gradient text effect"""
+    """Create gradient text effect using French flag colors"""
     colors = [start_color, Colors.BOLD + start_color, Colors.BRIGHT_WHITE, end_color, Colors.BOLD + end_color]
     result = ""
     for i, char in enumerate(text):
@@ -52,19 +37,12 @@ def gradient_text(text, start_color, end_color):
         result += colors[color_index] + char
     return result + Colors.RESET
 
-def rainbow_text(text):
-    """Create rainbow text effect"""
-    rainbow_colors = [
-        Colors.RED, Colors.BRIGHT_RED,
-        Colors.YELLOW, Colors.BRIGHT_YELLOW,
-        Colors.GREEN, Colors.BRIGHT_GREEN,
-        Colors.CYAN, Colors.BRIGHT_CYAN,
-        Colors.BLUE, Colors.BRIGHT_BLUE,
-        Colors.MAGENTA, Colors.BRIGHT_MAGENTA
-    ]
+def french_flag_text(text):
+    """Create text with French flag color sequence"""
+    colors = [Colors.BLUE, Colors.WHITE, Colors.RED]
     result = ""
     for i, char in enumerate(text):
-        color = rainbow_colors[i % len(rainbow_colors)]
+        color = colors[i % len(colors)]
         result += color + char
     return result + Colors.RESET
 
@@ -75,25 +53,36 @@ def loading_animation(text, duration=2):
     
     while time.time() < end_time:
         for char in chars:
-            sys.stdout.write(f'\r{Colors.CYAN}{char}{Colors.RESET} {text}')
+            sys.stdout.write(f'\r{Colors.BLUE}{char}{Colors.RESET} {text}')
             sys.stdout.flush()
             time.sleep(0.1)
-    sys.stdout.write(f'\r{Colors.GREEN}✅{Colors.RESET} {text} Complete!\n')
+    sys.stdout.write(f'\r{Colors.BRIGHT_BLUE}✅{Colors.RESET} {text} Complete!\n')
 
 def print_banner():
-    """Display cool banner with gradients"""
+    """Display PixelCraft banner with French flag colors"""
     banner = [
-        " █████╗ ██╗     ███████╗ ██████╗████████╗██╗███╗   ██╗ ██████╗ ",
-        "██╔══██╗██║     ██╔════╝██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝ ",
-        "███████║██║     █████╗  ██║        ██║   ██║██╔██╗ ██║██║  ███╗",
-        "██╔══██║██║     ██╔══╝  ██║        ██║   ██║██║╚██╗██║██║   ██║",
-        "██║  ██║███████╗███████╗╚██████╗   ██║   ██║██║ ╚████║╚██████╔╝",
-        "╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ "
+        "██████╗ ██╗██╗     ██████╗██████╗  █████╗ ███████╗████████╗",
+        "██╔══██╗██║██║    ██╔════╝██╔══██╗██╔══██╗██╔════╝╚══██╔══╝",
+        "██████╔╝██║██║    ██║     ██████╔╝███████║█████╗     ██║   ",
+        "██╔═══╝ ██║██║    ██║     ██╔══██╗██╔══██║██╔══╝     ██║   ",
+        "██║     ██║██║    ╚██████╗██║  ██║██║  ██║███████╗   ██║   ",
+        "╚═╝     ╚═╝╚═╝     ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   "
     ]
     
     print("\n")
-    for line in banner:
-        print(gradient_text(line, Colors.CYAN, Colors.MAGENTA))
+    for i, line in enumerate(banner):
+        if i == 0:
+            print(f"{Colors.BLUE}{line}{Colors.RESET}")
+        elif i == 1:
+            print(f"{Colors.WHITE}{line}{Colors.RESET}")
+        elif i == 2:
+            print(f"{Colors.RED}{line}{Colors.RESET}")
+        elif i == 3:
+            print(f"{Colors.BLUE}{line}{Colors.RESET}")
+        elif i == 4:
+            print(f"{Colors.WHITE}{line}{Colors.RESET}")
+        else:
+            print(f"{Colors.RED}{line}{Colors.RESET}")
         time.sleep(0.05)
     print("\n")
 
@@ -107,6 +96,7 @@ def check_package_installed(package):
         package_mappings = {
             'Pillow': 'PIL',
             'pywin32': 'win32api',
+            'pywebview': 'webview',  # Special case: pywebview installs as webview
         }
 
         if package in package_mappings:
@@ -120,9 +110,9 @@ def check_package_installed(package):
 def install_package(package):
     """Install a package using pip"""
     try:
-        print(f"{Colors.BRIGHT_YELLOW}📦 Installing {package}...{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}📦 Installing {package}...{Colors.RESET}")
         subprocess.check_call([sys.executable, "-m", "pip", "install", package, "--quiet"])
-        print(f"{Colors.BRIGHT_GREEN}✅ {package} installed successfully{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}✅ {package} installed successfully{Colors.RESET}")
         return True
     except subprocess.CalledProcessError as e:
         print(f"{Colors.RED}❌ Failed to install {package}: {e}{Colors.RESET}")
@@ -130,7 +120,7 @@ def install_package(package):
 
 def setup_dependencies():
     """Install all required dependencies"""
-    print(f"{Colors.BRIGHT_CYAN}🚀 Checking dependencies...{Colors.RESET}")
+    print(f"{Colors.BRIGHT_BLUE}🚀 Checking dependencies...{Colors.RESET}")
 
     # List of required packages
     dependencies = [
@@ -140,7 +130,7 @@ def setup_dependencies():
         "pyautogui",
         "pywin32",
         "pyperclip",
-        "pywebview",
+        "pywebview",  # This is what we install
         "requests",
         "cryptography",
         "keyboard"
@@ -153,16 +143,16 @@ def setup_dependencies():
     for package in dependencies:
         if check_package_installed(package):
             already_installed.append(package)
-            print(f"{Colors.BRIGHT_GREEN}✅ {package} already installed{Colors.RESET}")
+            print(f"{Colors.BRIGHT_BLUE}✅ {package} already installed{Colors.RESET}")
         else:
             to_install.append(package)
 
     if already_installed:
-        print(f"{Colors.BRIGHT_MAGENTA}📋 Already installed: {', '.join(already_installed)}{Colors.RESET}")
+        print(f"{Colors.WHITE}📋 Already installed: {', '.join(already_installed)}{Colors.RESET}")
 
     # Install missing packages
     if to_install:
-        print(f"{Colors.BRIGHT_YELLOW}📦 Need to install: {', '.join(to_install)}{Colors.RESET}")
+        print(f"{Colors.BRIGHT_RED}📦 Need to install: {', '.join(to_install)}{Colors.RESET}")
         failed_installs = []
         
         for package in to_install:
@@ -174,15 +164,15 @@ def setup_dependencies():
             print("Please install these manually or check your internet connection")
             return False
     else:
-        print(f"{Colors.BRIGHT_GREEN}🎉 All dependencies already installed!{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}🎉 All dependencies already installed!{Colors.RESET}")
 
-    print(f"{Colors.BRIGHT_GREEN}✅ Dependency check completed!{Colors.RESET}")
+    print(f"{Colors.BRIGHT_BLUE}✅ Dependency check completed!{Colors.RESET}")
     return True
 
 def download_file(url, filename):
     """Download a file from URL to specified directory"""
     try:
-        print(f"{Colors.BRIGHT_CYAN}⬇️ Downloading from: {url}{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}⬇️ Downloading from: {url}{Colors.RESET}")
         response = requests.get(url, stream=True, timeout=30)
         response.raise_for_status()
 
@@ -191,7 +181,7 @@ def download_file(url, filename):
                 f.write(chunk)
         
         file_size = os.path.getsize(filename)
-        print(f"{Colors.BRIGHT_GREEN}✅ Downloaded successfully ({file_size} bytes){Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}✅ Downloaded successfully ({file_size} bytes){Colors.RESET}")
         return True
     except requests.exceptions.ConnectionError as e:
         print(f"{Colors.RED}🌐 Connection Error - Check your internet connection{Colors.RESET}")
@@ -213,15 +203,15 @@ def download_encrypted_script():
     pyd_filename = "lighter_script.pyd"
     local_path = os.path.join(temp_dir, pyd_filename)
 
-    print(f"{Colors.BRIGHT_MAGENTA}📁 Using temp directory: {temp_dir}{Colors.RESET}")
+    print(f"{Colors.WHITE}📁 Using temp directory: {temp_dir}{Colors.RESET}")
 
     # Delete existing file to update it
     if os.path.exists(local_path):
         try:
             os.remove(local_path)
-            print(f"{Colors.BRIGHT_YELLOW}🗑️ Removed old {pyd_filename} for update{Colors.RESET}")
+            print(f"{Colors.BRIGHT_RED}🗑️ Removed old {pyd_filename} for update{Colors.RESET}")
         except Exception as e:
-            print(f"{Colors.YELLOW}⚠️ Could not remove old file: {e}{Colors.RESET}")
+            print(f"{Colors.RED}⚠️ Could not remove old file: {e}{Colors.RESET}")
 
     # Try multiple download sources
     download_sources = [
@@ -234,13 +224,13 @@ def download_encrypted_script():
     ]
 
     for url in download_sources:
-        print(f"{Colors.BRIGHT_CYAN}📥 Downloading from: {url}{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}📥 Downloading from: {url}{Colors.RESET}")
         if download_file(url, local_path):
             return local_path
         print(f"{Colors.RED}❌ Download failed, trying next source...{Colors.RESET}")
 
     print(f"{Colors.RED}❌ Could not download {pyd_filename}{Colors.RESET}")
-    print(f"{Colors.BRIGHT_YELLOW}💡 Solutions:{Colors.RESET}")
+    print(f"{Colors.BRIGHT_RED}💡 Solutions:{Colors.RESET}")
     print("  1. Make your GitHub repo public, OR")
     print("  2. Host the file on a public server/CDN, OR") 
     print("  3. Place lighter_script.pyd in the temp/pixelcraft folder manually")
@@ -259,18 +249,18 @@ def load_and_run_script():
         return False
 
     try:
-        print(f"{Colors.BRIGHT_CYAN}🔓 Loading encrypted script: {local_path}{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}🔓 Loading encrypted script: {local_path}{Colors.RESET}")
         
         # Load the .pyd module
         spec = importlib.util.spec_from_file_location("lighter_script", local_path)
         lighter_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(lighter_module)
         
-        print(f"{Colors.BRIGHT_GREEN}✅ Encrypted script loaded successfully!{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}✅ Encrypted script loaded successfully!{Colors.RESET}")
         
         # Run using the pattern you specified
         if hasattr(lighter_module, 'main'):
-            print(f"{Colors.BRIGHT_MAGENTA}🎨 Starting lighter script...{Colors.RESET}")
+            print(f"{Colors.BRIGHT_BLUE}🎨 Starting PixelCraft script...{Colors.RESET}")
             # This calls the function you originally wrote as your app's entry point
             lighter_module.main()
         else:
@@ -287,11 +277,11 @@ def main():
     """Main entry point"""
     # Display cool banner
     print_banner()
-    print(gradient_text("🎨 Pixel Art Drawing Script Launcher", Colors.BRIGHT_CYAN, Colors.BRIGHT_MAGENTA))
+    print(french_flag_text("🎨 PixelCraft Pro - Pixel Art Drawing Script Launcher"))
     print("=" * 60)
 
     # Loading animations
-    loading_animation("Initializing system")
+    loading_animation("Initializing PixelCraft system")
     
     # Step 1: Install dependencies
     if not setup_dependencies():
@@ -310,9 +300,9 @@ def main():
             print(f"{Colors.RED}❌ Failed to run encrypted script. Exiting...{Colors.RESET}")
             sys.exit(1)
         
-        print(f"{Colors.BRIGHT_GREEN}Window closed, exiting script...{Colors.RESET}")
+        print(f"{Colors.BRIGHT_BLUE}Window closed, exiting script...{Colors.RESET}")
     except KeyboardInterrupt:
-        print(f"\n{Colors.BRIGHT_YELLOW}🛑 Script interrupted by user{Colors.RESET}")
+        print(f"\n{Colors.BRIGHT_RED}🛑 Script interrupted by user{Colors.RESET}")
     except Exception as e:
         print(f"{Colors.RED}❌ Unexpected error: {e}{Colors.RESET}")
 
