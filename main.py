@@ -7,29 +7,27 @@ import tempfile
 from pathlib import Path
 import time
 
-# ANSI Color Codes with French Flag Colors
 class Colors:
     RESET = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
-    # French Flag Colors
-    BLUE = '\033[34m'        # Blue stripe
-    WHITE = '\033[37m'       # White stripe  
-    RED = '\033[31m'         # Red stripe
+    BLUE = '\033[34m'
+    WHITE = '\033[37m'
+    RED = '\033[31m'
     
-    # Bright versions
     BRIGHT_BLUE = '\033[94m'
     BRIGHT_WHITE = '\033[97m'
     BRIGHT_RED = '\033[91m'
+    BRIGHT_YELLOW = '\033[93m'
+    BRIGHT_GREEN = '\033[92m'
+    YELLOW = '\033[33m'
     
-    # Background colors
     BG_BLUE = '\033[44m'
     BG_WHITE = '\033[47m'
     BG_RED = '\033[41m'
 
 def gradient_text(text, start_color, end_color):
-    """Create gradient text effect using French flag colors"""
     colors = [start_color, Colors.BOLD + start_color, Colors.BRIGHT_WHITE, end_color, Colors.BOLD + end_color]
     result = ""
     for i, char in enumerate(text):
@@ -38,7 +36,6 @@ def gradient_text(text, start_color, end_color):
     return result + Colors.RESET
 
 def french_flag_text(text):
-    """Create text with French flag color sequence"""
     colors = [Colors.BLUE, Colors.WHITE, Colors.RED]
     result = ""
     for i, char in enumerate(text):
@@ -47,7 +44,6 @@ def french_flag_text(text):
     return result + Colors.RESET
 
 def loading_animation(text, duration=2):
-    """Display loading animation"""
     chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
     end_time = time.time() + duration
     
@@ -59,7 +55,6 @@ def loading_animation(text, duration=2):
     sys.stdout.write(f'\r{Colors.BRIGHT_BLUE}✅{Colors.RESET} {text} Complete!\n')
 
 def print_banner():
-    """Display PixelCraft banner with French flag colors"""
     banner = """
                                                                                                      
 ,-.----.                                                                                             
@@ -81,20 +76,19 @@ def print_banner():
     
     lines = banner.strip().split('\n')
     for i, line in enumerate(lines):
-        if i < 3 or i >= len(lines) - 2:  # First and last few lines (mostly empty)
+        if i < 3 or i >= len(lines) - 2:
             print(f"{Colors.BLUE}{line}{Colors.RESET}")
-        elif i % 3 == 0:  # Every 3rd line blue
+        elif i % 3 == 0:
             print(f"{Colors.BLUE}{line}{Colors.RESET}")
-        elif i % 3 == 1:  # Every 3rd line white
+        elif i % 3 == 1:
             print(f"{Colors.WHITE}{line}{Colors.RESET}")
-        else:  # Every 3rd line red
+        else:
             print(f"{Colors.RED}{line}{Colors.RESET}")
-        if i > 2 and i < len(lines) - 3:  # Add small delay for main art
+        if i > 2 and i < len(lines) - 3:
             time.sleep(0.02)
     print()
 
 def show_license():
-    """Display license agreement and require acceptance"""
     license_text = f"""
 {Colors.BG_BLUE}{Colors.WHITE} PIXELCRAFT LICENSE AGREEMENT {Colors.RESET}
 
@@ -147,19 +141,17 @@ The software/material is provided "AS IS", without warranty of any kind, express
             print(f"{Colors.RED}❌ License not accepted. Exiting...{Colors.RESET}")
             return False
         else:
-            print(f"{Colors.YELLOW}Please enter 'y' for yes or 'n' for no: {Colors.RESET}", end="")
+            print(f"{Colors.BRIGHT_YELLOW}Please enter 'y' for yes or 'n' for no: {Colors.RESET}", end="")
 
 def check_package_installed(package):
-    """Check if a package is already installed"""
     try:
         __import__(package)
         return True
     except ImportError:
-        # Handle special package name mappings
         package_mappings = {
             'Pillow': 'PIL',
             'pywin32': 'win32api',
-            'pywebview': 'webview',  # Special case: pywebview installs as webview
+            'pywebview': 'webview',
         }
 
         if package in package_mappings:
@@ -171,7 +163,6 @@ def check_package_installed(package):
         return False
 
 def install_package(package):
-    """Install a package using pip"""
     try:
         print(f"{Colors.BRIGHT_BLUE}📦 Installing {package}...{Colors.RESET}")
         subprocess.check_call([sys.executable, "-m", "pip", "install", package, "--quiet"])
@@ -182,10 +173,8 @@ def install_package(package):
         return False
 
 def setup_dependencies():
-    """Install all required dependencies"""
     print(f"{Colors.BRIGHT_BLUE}🚀 Checking dependencies...{Colors.RESET}")
 
-    # List of required packages
     dependencies = [
         "gradio",
         "numpy", 
@@ -193,7 +182,7 @@ def setup_dependencies():
         "pyautogui",
         "pywin32",
         "pyperclip",
-        "pywebview",  # This is what we install
+        "pywebview",
         "requests",
         "cryptography",
         "keyboard"
@@ -202,7 +191,6 @@ def setup_dependencies():
     to_install = []
     already_installed = []
 
-    # Check which packages are already installed
     for package in dependencies:
         if check_package_installed(package):
             already_installed.append(package)
@@ -213,7 +201,6 @@ def setup_dependencies():
     if already_installed:
         print(f"{Colors.WHITE}📋 Already installed: {', '.join(already_installed)}{Colors.RESET}")
 
-    # Install missing packages
     if to_install:
         print(f"{Colors.BRIGHT_RED}📦 Need to install: {', '.join(to_install)}{Colors.RESET}")
         failed_installs = []
@@ -233,7 +220,6 @@ def setup_dependencies():
     return True
 
 def download_file(url, filename):
-    """Download a file from URL to specified directory"""
     try:
         print(f"{Colors.BRIGHT_BLUE}⬇️ Downloading from: {url}{Colors.RESET}")
         response = requests.get(url, stream=True, timeout=30)
@@ -257,8 +243,6 @@ def download_file(url, filename):
         return False
 
 def download_encrypted_script():
-    """Download the lighter_script.pyd to temp directory"""
-    # Create temp directory for pixelcrafter (consistent with launcher)
     temp_dir = os.path.join(tempfile.gettempdir(), 'pixelcrafter')
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
@@ -268,7 +252,6 @@ def download_encrypted_script():
 
     print(f"{Colors.WHITE}📁 Using temp directory: {temp_dir}{Colors.RESET}")
 
-    # Delete existing file to update it
     if os.path.exists(local_path):
         try:
             os.remove(local_path)
@@ -276,14 +259,8 @@ def download_encrypted_script():
         except Exception as e:
             print(f"{Colors.RED}⚠️ Could not remove old file: {e}{Colors.RESET}")
 
-    # Try multiple download sources
     download_sources = [
-        # GitHub raw URL (if repo becomes public)
         "https://github.com/DarkmoonOnDiscord/AutoDraw/raw/refs/heads/main/lighter_script.pyd",
-        
-        # Alternative hosting options (add your own)
-        # "https://your-server.com/lighter_script.pyd",
-        # "https://drive.google.com/uc?id=YOUR_FILE_ID",  # Google Drive direct link
     ]
 
     for url in download_sources:
@@ -301,8 +278,6 @@ def download_encrypted_script():
     return None
 
 def load_and_run_script():
-    """Load the lighter_script.pyd from temp directory and run it"""
-    # Look for the pyd file in temp directory
     temp_dir = os.path.join(tempfile.gettempdir(), 'pixelcrafter')
     pyd_filename = "lighter_script.pyd"
     local_path = os.path.join(temp_dir, pyd_filename)
@@ -314,17 +289,14 @@ def load_and_run_script():
     try:
         print(f"{Colors.BRIGHT_BLUE}🔓 Loading encrypted script: {local_path}{Colors.RESET}")
         
-        # Load the .pyd module
         spec = importlib.util.spec_from_file_location("lighter_script", local_path)
         lighter_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(lighter_module)
         
         print(f"{Colors.BRIGHT_BLUE}✅ Encrypted script loaded successfully!{Colors.RESET}")
         
-        # Run using the pattern you specified
         if hasattr(lighter_module, 'main'):
             print(f"{Colors.BRIGHT_BLUE}🎨 Starting PixelCraft script...{Colors.RESET}")
-            # This calls the function you originally wrote as your app's entry point
             lighter_module.main()
         else:
             print(f"{Colors.RED}❌ No 'main' function found in lighter_script{Colors.RESET}")
@@ -337,33 +309,26 @@ def load_and_run_script():
         return False
 
 def main():
-    """Main entry point"""
-    # Display cool banner
     print_banner()
     print(french_flag_text("🎨 PixelCraft Pro - Pixel Art Drawing Script Launcher"))
     print("=" * 60)
     
-    # Show and accept license
     if not show_license():
         sys.exit(1)
     
     print()
 
-    # Loading animations
     loading_animation("Initializing PixelCraft system")
     
-    # Step 1: Install dependencies
     if not setup_dependencies():
         print(f"{Colors.RED}❌ Dependency setup failed. Exiting...{Colors.RESET}")
         sys.exit(1)
 
-    # Step 2: Download encrypted script to temp directory
     script_path = download_encrypted_script()
     if not script_path:
         print(f"{Colors.RED}❌ Script download failed. Exiting...{Colors.RESET}")
         sys.exit(1)
 
-    # Step 3: Load and run the encrypted script
     try:
         if not load_and_run_script():
             print(f"{Colors.RED}❌ Failed to run encrypted script. Exiting...{Colors.RESET}")
